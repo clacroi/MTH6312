@@ -1,0 +1,79 @@
+\input{../../learningmacronote.tex}
+\title{Session 9}
+\author{Vahid Partovi Nia}
+\date{\today}
+\begin{document}
+\begin{center}
+\Huge Week 09
+\end{center}
+
+\begin{slide}{Computation}
+Separation problem is a well-known convergence issue in logistic regression and the support vector machines. However, it is considered a curse in regression and a blessing in support vector machines (try to understand why?).
+
+Suppose a binary regression with only one $x$. 
+Consider $10$ data with $y_i=0$ and $x_i=0$, and $10$ data with $y_i=1$
+and $x_i=1$, making a dataset with $n=20$ sample size. 
+Fit the logistic regression model with $\beta_0=0$ using the \texttt{glm} R function.
+
+\begin{itemize}
+\item[1)]Draw the likelihood function for this data set, i.e. draw $\ell(\beta_1)$ ($y$-axis) versus $\beta_1$ ($x$-axis).
+\item[2)] Try to fit the logistic model by direct maximization of the log likelihood using the \texttt{optim} or the \texttt{nlm} function. 
+Does it converge? Why?
+\item[3)] Modify your likelihood function to resolve this issue, and optimize your new function to estimate $\beta_1$. 
+\end{itemize}
+\end{slide}
+
+
+
+\begin{slide}{Theory}
+{\bf Deeper Understanding of Linear Support Vector Machines}\\
+\bigskip
+Remember $D(\beta_0,\boldsymbol \beta)$ from ESL page 131.\\
+\begin{itemize}
+\item[4)]
+Show that minimizing 
+$$D(\beta_0,\boldsymbol \beta)=-\sum\limits_{i\in\mathcal M}
+y_i(\beta_0 + \mathbf x_i^\top \boldsymbol \beta )$$ 
+is equivalent to minimizing 
+$$S(\beta_0,\boldsymbol \beta)=\sum
+_{i=1}^n \{1-y_i(\beta_0+\mathbf x_i^\top\boldsymbol \beta)\}_+.$$
+\end{itemize}
+\smallskip
+Hint: Start with finding $(\beta_0,\boldsymbol \beta)$ so that $y_i(\beta_0+\mathbf  x_i^\top\boldsymbol \beta) >0, \forall i=1,\ldots,n$. Since $n$ is finite it is equivalent to $y_i(\beta_0+\mathbf x_i^\top\boldsymbol \beta) >\delta$  for some $\delta>0$. (A trivial choice of $0<\delta<\mathrm{min}_{i=1,\ldots,n} \{y_i(\beta_0+\mathbf  x_i^\top\boldsymbol \beta)\} $, which means the vector $(\beta_0,\boldsymbol \beta)$ is re-scalable.) 
+\bigskip
+This means observation $i$ is misclassified if $y_i(\beta_0+\mathbf  x_i^\top\boldsymbol \beta)<\delta$ and now argue it is the same as minimizing 
+$$S(\beta_0,\boldsymbol \beta)=\sum_{i=1}^n \{\delta-y_i(\beta_0+\mathbf  x_i^\top\boldsymbol \beta)\}_+$$ To avoid re-scalability problem, choose for instance $\delta=1$. Still the minimizer $(\hat \beta_0,\hat{\boldsymbol \beta})$ is non-unique if data are separable, because any $S(\hat\beta_0,\hat{\boldsymbol \beta})=0$ is a solution (if you do not understand why you encounter uniqueness problem, look at Figure 4.14 page 129 of ESL giving two blue lines both with $S(\hat\beta_0,\hat{\boldsymbol \beta})=0$; this uniqueness problem is the same as the convergence problem of the logistic regression while data are separable).
+\bigskip
+
+
+{\bf Even More Interesting: Connection to Ridge Regression}
+
+
+\bigskip
+
+
+One way to find a unique solution is by adding $L_2$ penalty for a given $\lambda>0$ or so called maximizing the margin
+$$S(\beta_0,\boldsymbol \beta)=\sum_{i=1}^n \{1-y_i(\beta_0+\mathbf  x_i^\top\boldsymbol \beta)\}_+ +\lambda \sum_{j=1}^p \beta_j^2$$
+
+A special choice of $\lambda$ while data are not separable gives the maximum margin support vector classifier. This suggests the ridge estimator is a good initial value for the SVM!
+\end{slide}
+
+
+\begin{slide}{Application}
+For the zip code example 
+\begin{enumerate}
+ \item[5)] Plot data on the first two linear discriminant axes, 
+ you may need to look at functions in \texttt{R>library("class")}
+ \item[6)] On the plot 5), if possible, show the linear discriminant bounaries (or regions).
+ \item[7)] On the plot 5), if possible, show the quadratic discriminant bounaries (or regions).
+ \item[8)] On the plot 5) show $k$-nearest neighbours regions, for $k$ you judge appropriate visually, i.e. 
+ by seeing the regions on the first two linear discriminant axes. 
+ \item[9)] Choose $k$ large enough to see something close to a linear classification.
+ \end{enumerate}
+Hint 1: You may need to set coveriances of the covariance matrix to zero for linear or quadratic discriminants.\newline
+Hint 2: Drawing boundaries is difficult, but colouring regions is much easier using the \texttt{R>image} command.\newline
+Hint 3: Also look at package \texttt{klaR} and some visualization functions and especially the \texttt{partimat} function.
+\end{slide}
+
+
+\end{document}

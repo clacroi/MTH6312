@@ -1,0 +1,227 @@
+\documentclass[12pt,a4paper]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% write which packages is used in your text
+\usepackage{amsmath}
+\usepackage[amsmath]{ntheorem}
+\usepackage{lastpage}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+%now you can write a text with French accents 
+\usepackage[utf8]{inputenc}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% write your abbreviation of symbols here
+
+%fill the brackets with your firstname and lastname
+\def\StudentName{Corentin Lacroix} 
+%fill the brackets with your matricule (poly student number)
+\def\StudentMatricule{1812554}
+% exercise of which week? 
+\def\ExerciseNo{7}
+\def\R{\mathcal{R}}% set of real numbers as \R
+\def\argmax{\mathrm{argmax}} % argmax
+\def\argmin{\mathrm{argmin}} % argmin
+\def\T{^\top} %transpose
+\def\bbeta{\boldsymbol \beta} % bold beta
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% define your tags here
+\theoremheaderfont{\normalfont\bfseries}
+\theorembodyfont{\normalfont}
+\newtheorem{exercise}{Exercise}
+\newtheorem{solution}{Solution}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% define what to write in paper margins
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{{\bf~\StudentName,~\StudentMatricule}}
+\chead{}
+\rhead{\emph{MTH6312: Exercise~\ExerciseNo}}
+\lfoot{}
+\cfoot{\thepage~/~\pageref{LastPage}}
+\rfoot{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% gives more space and expands margins
+\textwidth 6.4in
+\textheight 9in \oddsidemargin 0in \evensidemargin 0in \topmargin -0.5in
+\renewcommand{\baselinestretch}{2} 
+% this puts more space between lines, so that I can write comments in between
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+%%%%%Generates your first page
+\begin{titlepage}
+\begin{center}
+\textsc{\LARGE Exercise no \ExerciseNo}\\[1.5cm]
+\vspace{2in}
+\textsc{\Large \StudentName~\StudentMatricule}\\[0.5cm]
+\textsc{MTH 6312: Méthodes Statistiques D'Apprentissage}\\[0.5cm]
+\today
+\end{center}
+\end{titlepage}
+%%%% Title Page ends here
+
+\begin{exercise}
+Prove the $h_3(x) = (x-\xi_2)_+$ cause continuity at $x=\xi_2$ in expansion of the form $f(x) = \beta_0 + \beta_1x + (x-\xi_1)_+ + (x-\xi_2)_+$
+\end{exercise}
+\begin{solution}
+Let $f$ be $f(x) = \beta_0 + \beta_1 x + (x - \xi_1)_+ + (x - \xi_2)_+ \forall x \in \R$ with $(\xi_1, \xi_2) \in \R^2$ and $(\beta_0, \beta_1) \in \R^2$ \\
+We have \[f(x)=\begin{cases}
+               \beta_0 + \beta_1 x \ if\ x\leq \xi_1\\
+               \beta_0 + \beta_1 x + x - \xi_1\ if\ \xi_1 < x \leq \xi_2\\
+			   \beta_0 + \beta_1 x + x - \xi_1 + x - \xi_2\ if\ x > \xi_2            
+			   \end{cases}\]\\
+			   
+Then, $\underset{\underset{x\rightarrow\xi_2}{x > \xi_2}}{lim}f(x) = \underset{\underset{x\rightarrow\xi_2}{x > \xi_2}}{lim}(\beta_0 + \beta_1 x + x - \xi_1 + x - \xi_2) = \beta_0 + \beta_1 \xi_2 + \xi_2 - \xi_1$\\
+
+And $\underset{\underset{x\rightarrow\xi_2}{x < \xi_2}}{lim}f(x) = \underset{\underset{x\rightarrow\xi_2}{x < \xi_2}}{lim}(\beta_0 + \beta_1 x + x - \xi_1) = \beta_0 + \beta_1 \xi_2 + \xi_2 - \xi_1 = \underset{\underset{x\rightarrow\xi_2}{x > \xi_2}}{lim}f(x)$\\
+
+Consequently, the $f$ function is continous at $x=\xi_2$ thanks to the term $h_3(x) = (x - \xi_2)_+$
+\end{solution}
+
+\begin{exercise}
+Why don’t we include terms of the form $(x-\xi_l)^i$ for $i \in \{0,1,2\}$ in cubic spline expansion?
+Prove it for the case of cubic spline with only one knot
+\end{exercise}
+\begin{solution}
+Let $f$ be $f(x) = \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 + \beta_4(x - \xi)^3_+ \ \forall x \in \R$ with $\xi \in \R$ and $(\beta_0, \beta_1, \beta_2, \beta_3, \beta_4) \in \R^5$ \\
+
+We have : \[f(x)=\begin{cases}
+               \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 = f_1(x) \ if\ x\leq \xi\\
+               \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 + \beta_4(x - \xi)^3 = f2(x) \ if\ x > \xi\\
+			   \end{cases}\]\\
+With $f_1(x) = 0 \ if\ x > \xi$ and $f_2(x) = 0 \ if\ x \leq \xi$\\			   
+
+So, \[f'(x)=\begin{cases}
+               f_1'(x) \ if\ x\leq \xi\\
+               f_2'(x) \ if\ x > \xi\\
+			   \end{cases}\]\\
+And we have a similar result for f".\\
+
+If we derive $f_1$ and $f_2$, we get :
+
+\[\begin{cases}
+               f_1'(x) = \beta_1 + 2\beta_2x + 3\beta_3x^2 \ \forall x\leq \xi\\
+               f_2'(x) = \beta_1 + 2\beta_2x + 3\beta_3x^2 + 3\beta_4(x - \xi)^2 \ \forall x > \xi\\
+            \end{cases}\]
+Then, immediatly, $$\underset{\underset{x\rightarrow\xi}{x \leq \xi}}{lim}f_1'(x) = \underset{\underset{x\rightarrow\xi}{x > \xi}}{lim}f_2'(x) = \beta_1 + \beta_2\xi + 3\beta_3\xi^2 $$	
+
+Similarly, 
+\[\begin{cases}
+               f_1"(x) = 2\beta_2 + 6\beta_3x \ \forall x\leq \xi\\
+               f_2"(x) = 2\beta_2 + 6\beta_3x + 6\beta_4(x - \xi) \ \forall x > \xi\\
+            \end{cases}\]
+            
+And,$$\underset{\underset{x\rightarrow\xi}{x \leq \xi}}{lim}f_1"(x) = \underset{\underset{x\rightarrow\xi}{x > \xi}}{lim}f_2"(x) = 2\beta_2 + 6 \beta_3\xi$$	
+
+So, in this case, $f'$ and $f"$ are continuous for $x=\xi$.\\
+
+If we had added to $f$ a term $\beta (x - \xi)_+^i,\ i\in\{0,1,2\}$ : \\  
+- for $i=0$, $f$ wouldn't be continous in $x = \xi$ because $\underset{\underset{x\rightarrow\xi}{x \leq \xi}}{lim}f_1(x)$ and $\underset{\underset{x\rightarrow\xi}{x > \xi}}{lim}f_1(x)$ would be separated by the constant $\beta$. \\
+- for $i=1$, $f'$ wouldn't be continous in $x = \xi$ because $\underset{\underset{x\rightarrow\xi}{x \leq \xi}}{lim}f_1'(x)$ and $\underset{\underset{x\rightarrow\xi}{x > \xi}}{lim}f_1'(x)$ would be separated by the constant $\beta$. \\
+- for $i=2$, $f$ wouldn't be continous in $x = \xi$ because $\underset{\underset{x\rightarrow\xi}{x \leq \xi}}{lim}f_1"(x)$ and $\underset{\underset{x\rightarrow\xi}{x > \xi}}{lim}f_1"(x)$ would be separated by the constant $\beta$. \\
+\end{solution}
+
+\begin{exercise}
+Generate the following graph using smoothing splines with $\lambda = 0.00022$ and $df = 12$.
+\end{exercise}
+\begin{solution}
+R-code for generating the corresponding plot : \\
+\begin{verbatim}
+> plot(subset(bone, gender == 'female')$age,
++ subset(bone, gender == 'female')$spnbmd, 
++ col='red', pch=3, xlab='Age', ylab='Relative change in spinal BMD')
+> points(subset(bone, gender == 'male')$age,
+ subset(bone, gender == 'male')$spnbmd,
+  col='blue', pch=4)
+
+> femaleSmooth = smooth.spline(subset(bone, gender == 'female')$age, 
++ subset(bone, gender == 'female')$spnbmd, df=12)
+> maleSmooth = smooth.spline(subset(bone, gender == 'male')$age, 
++ subset(bone, gender == 'male')$spnbmd, df=12)
+
+> lines(femaleSmooth, col='red', lwd=3)
+> lines(maleSmooth, col='blue', lwd=3)
+> legend(20, 0.125, c("Female", "Male"), lty=c(1,1),
++ lwd=c(2.5,2.5), col=c("red", "blue"))
+\end{verbatim}
+
+The corresponding figure is in annex.\\
+\end{solution}
+
+\begin{exercise}
+Show that the matrix $\boldsymbol S_\lambda = \boldsymbol N(\boldsymbol N^\top \boldsymbol N + \lambda \boldsymbol \Omega_N)^{-1} \boldsymbol N^\top$ is symmetric, idempotent and its rank is equal to N (number of observations)
+\end{exercise}
+\begin{solution}
+First of all, let's compute $\boldsymbol S_\lambda^\top$ : \\
+\begin{equation}
+\begin{split}
+\boldsymbol S_\lambda^\top & = N((\boldsymbol N^\top \boldsymbol N + \lambda \boldsymbol \Omega_N)^{-1})^\top)\\
+ & = \boldsymbol N((\boldsymbol N^\top \boldsymbol N + \lambda \boldsymbol \Omega_N)^{\top})^{-1}) \\
+ & = \boldsymbol N(\boldsymbol N^\top \boldsymbol N + \lambda \boldsymbol \Omega_N^{\top})^{-1})\\
+ & = \boldsymbol N(\boldsymbol N^\top \boldsymbol N + \lambda \boldsymbol \Omega_N)^{-1} \boldsymbol N^\top\ because\ \boldsymbol \Omega_N\ is\ symmetric\
+\end{split}
+\end{equation}
+We can conclude that : $$\boxed{\boldsymbol S_\lambda\ is\ symmetric}$$
+
+Secondly, it is clear that $\boldsymbol S_\lambda$ is inversible is equivalent to $\boldsymbol N$ inversible and $\boldsymbol N^\top \boldsymbol N + \lambda \boldsymbol \Omega_N)^{-1}$. The question assumes implicitely that $\boldsymbol N^\top \boldsymbol N + \lambda \boldsymbol \Omega_N)$ (and I would be very embarassed to prove it). Given that, we just have to prove that $\boldsymbol N$ is inversible to prove that $\boldsymbol S_\lambda$ is inversible.\\
+
+It seems to be also a complicated task...
+The space spanned by the N cubic spline spline basis function is a N linear dimension space. By adding more constraints on these N cubic spline functions. By forcing the global resulting function to have fixed values at the knots, that is to say for a given real set $(\alpha_1, \alpha_2, \ldots, \alpha_n) \in \R^N)$ forcing $f$ to respect the constraints $\forall k \in \{1,2,\cdots, N\},\ f(x_k) = \sum_{i=1}^N \theta_i N_i(x_k) = \alpha_k$, we remove N degrees of freedom, that gives 0 degrees of freedom.\\
+
+Thus, the linear application defined for a given set of $\R^N \ (x_1, x_2, \ldots, x_n),\ \forall f$ in the natural cubic spline space by $\phi(f) = (f(x_1), f(x_2), \ldots, f(x_n))$ is a bijection between the cubic spline space and $\R^N$.\\
+
+Consequently, the columns vector of $\boldsymbol N$ are the images by the application $\phi$ of the function basis $(N_1, N_2, \cdots, N_N)$. The columns of the matrix form a basis of $\R^N$ are independent and :  
+
+$$\boxed{\boldsymbol N \ is\ inversible\ and\ so\ is\ \boldsymbol S_\lambda}$$
+
+(I admit that the justification for $\phi$ being injective is not satisfactory..)          
+\end{solution}
+
+\begin{exercise}
+Prove that $\boldsymbol S_\lambda$ can be written in form of $(\boldsymbol I + \lambda \boldsymbol K)^{-1}$ where $ \boldsymbol K$ does not depend on $\lambda$.
+\end{exercise}
+\begin{solution}
+Knowing that if $\boldsymbol A$, $\boldsymbol B$ and $\boldsymbol C$ are inversible matrices, then $(\boldsymbol A \boldsymbol B \boldsymbol C) =  \boldsymbol C^{-1} \boldsymbol B^{-1} \boldsymbol A^{-1}$. \\
+
+We have : 
+
+\begin{equation}
+\boxed{\begin{split}
+\boldsymbol S_\lambda & = ((\boldsymbol N^\top)^{-1}((\boldsymbol N^\top \boldsymbol N + \lambda \boldsymbol \Omega_N)(\boldsymbol N^{-1}))^{-1} \\
+& = (\boldsymbol I + \lambda \boldsymbol N^{-\top} \boldsymbol \Omega_N \boldsymbol N^{-1})^{-1}
+\end{split}}
+\end{equation}
+\end{solution}
+
+\begin{exercise}
+Produce the following graphs using smoothing splines with the mentioned degrees of freedom. 
+\end{exercise}
+\begin{solution}
+R-code to generate the 2 plots : \\
+
+\begin{verbatim}
+> plot(airData$daggett.pressure.gradient, airData$ozone.level, 
++ xlab='Daggett Pressure Gradient', ylab='Ozone Level', pch=19, col='gray')
+
+> smoothFunction1 = smooth.spline(airData$daggett.pressure.gradient,
++ airData$ozone.level, df=5)
+> smoothFunction2 = smooth.spline(airData$daggett.pressure.gradient, 
++ airData$ozone.level, df=11)
+> smoothFunction3 = smooth.spline(airData$daggett.pressure.gradient,
++ airData$ozone.level, df=17)
+
+> lines(smoothFunction1, col='blue', lwd=3)
+> lines(smoothFunction2, col='red', lwd=3)
+> lines(smoothFunction3, col='yellow', lwd=3)
+> legend(60, 28.5, c("df = 5", "df = 11", "df = 17"), lty=c(1,1,1),
++ lwd=c(2.5,2.5,2.5), col=c("blue", "red", "yellow"))
+\end{verbatim}
+\end{solution}
+\end{document}

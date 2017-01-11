@@ -1,0 +1,214 @@
+\documentclass[12pt,a4paper]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% write which packages is used in your text
+\usepackage{amsmath}
+\usepackage[amsmath]{ntheorem}
+\usepackage{lastpage}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+
+%now you can write a text with French accents 
+\usepackage[utf8]{inputenc}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% write your abbreviation of symbols here
+
+%fill the brackets with your firstname and lastname
+\def\StudentName{Corentin Lacroix} 
+%fill the brackets with your matricule (poly student number)
+\def\StudentMatricule{1812554}
+% exercise of which week? 
+\def\ExerciseNo{5}
+
+
+
+
+\def\R{\mathcal{R}}% set of real numbers as \R
+\def\argmax{\mathrm{argmax}} % argmax
+\def\argmin{\mathrm{argmin}} % argmin
+\def\T{^\top} %transpose
+\def\bbeta{\boldsymbol \beta} % bold beta
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% define your tags here
+\theoremheaderfont{\normalfont\bfseries}
+\theorembodyfont{\normalfont}
+\newtheorem{exercise}{Exercise}
+\newtheorem{solution}{Solution}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% define what to write in paper margins
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{{\bf~\StudentName,~\StudentMatricule}}
+\chead{}
+\rhead{\emph{MTH6312: Exercise~\ExerciseNo}}
+\lfoot{}
+\cfoot{\thepage~/~\pageref{LastPage}}
+\rfoot{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% gives more space and expands margins
+\textwidth 6.4in
+\textheight 9in \oddsidemargin 0in \evensidemargin 0in \topmargin -0.5in
+\renewcommand{\baselinestretch}{2} 
+% this puts more space between lines, so that I can write comments in between
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+
+%%%%%Generates your first page
+\begin{titlepage}
+\begin{center}
+\textsc{\LARGE Exercise no \ExerciseNo}\\[1.5cm]
+\vspace{2in}
+\textsc{\Large \StudentName~\StudentMatricule}\\[0.5cm]
+\textsc{MTH 6312: Méthodes Statistiques D'Apprentissage}\\[0.5cm]
+\today
+\end{center}
+\end{titlepage}
+%%%% Title Page ends here
+
+
+\begin{exercise}
+ Show that
+$\hat{\bbeta} = (\mathbf{X}\T \mathbf{X} + \lambda \mathbf{I})^{-1} \mathbf{X}\T \mathbf{y}$
+is a solution to minimizing
+$ S(\bbeta) = (\mathbf{y} - \mathbf{X} \bbeta)\T (\mathbf{y} - \mathbf{X} \bbeta) + \lambda \bbeta\T \bbeta$.
+\end{exercise}
+
+
+\begin{solution}
+Here write your solution. Always box your final solution in a new line, and centred, like:
+\\
+$$ \Rightarrow \boxed{
+ S(\bbeta) = 
+\mathbf{y}\T \mathbf{y} - \mathbf{y}\T \mathbf{X} \bbeta - \bbeta\T \mathbf{X}\T \mathbf{y}
++  \bbeta^T (\mathbf{X}\T \mathbf{X} + \lambda \mathbf{I}) \bbeta.
+}
+$$
+\vspace*{1.5cm} % you can add vertical space as much as you want
+
+I defined \textbackslash boldsymbol \textbackslash beta as \textbackslash bbeta (see \textbackslash def section before \texttt{begin\{document\}}). Now it is much faster to write the equations that include bold beta. You may need to force \LaTeX to write the rest in a new page. \newpage %writes the rest in the new page
+
+
+Put your codes and its output in verbatim, it will be printed as it is. 
+\begin{verbatim}
+> prostate <- data.frame(lpsa=1:97, lcavol=1:97, lweight=1:97, age=1:97, lbph=1:97, svi=1:97, lcp=1:97, gleason=1:97, pgg45=1:97)
+> prostate[1] <- x[9]
+> prostate[2:9] <- x[1:8]
+> pairs(prostate, col="purple")
+\end{verbatim}
+You may add some graphs, use always postscript files and Latex2Dvi, Dvi2PS, PS2PDF compiler sequence. 
+
+\end{solution}
+
+\begin{exercise}
+
+\end{exercise}
+\begin{solution}
+
+\end{solution}
+
+\begin{exercise}
+Show that ..
+\end{exercise}
+\begin{solution}
+We have : \\
+
+\begin{equation}
+\begin{split}
+A & = \frac{\pi r^2}{2} \\
+ & = \frac{1}{2} \pi r^2
+\end{split}
+\end{equation}
+
+
+
+\[ 
+\left \{
+  \begin{tabular}{ccc}
+  1 & 5 & 8 \\
+  0 & 2 & 4 \\
+  3 & 3 & -8 
+  \end{tabular}
+\right \}
+\]
+
+\begin{equation}
+\begin{split}
+(S) & = 2 \\
+	& = 3
+\end{split}
+\end{equation}
+
+\[\alpha(x)=\begin{cases}
+               x\\
+               \frac{1}{1+e^{-kx}}\\
+               \frac{e^x-e^{-x}}{e^x+e^{-x}}
+            \end{cases}\]
+
+\end{solution}
+
+\begin{exercise}
+Local polynomial regression is implemented the \texttt{loess} function in R. Load the prostate data using \texttt{R>data(prostate)} from \texttt{ElemStatLearn} package and try to predict \texttt{lcavol} using only \texttt{lcp}. Visualize your prediction as a smooth function and play with parameters \texttt{span} and \texttt{degree}. Plot different fitting functions and after seeing these variants suggest some values for \texttt{span} and \texttt{degree} that fits the data better.\\
+\vspace{0.2in}
+{ \texttt{Lesson to learn:} Bandwith of the kernel is more important than the form of the kernel or the polynomial order of the local regression.}
+\end{exercise}
+
+\begin{solution}
+I defined a R function taking a span value and a degree value as argument that plots on 1 2D figure : \\
+- data points from prostate (lcavol vs. lcp)\\
+- smooth prediction function obtained by local polynomial regression. \\
+
+The function also prints sum of squared residuals, hence train $l2$ norm. Some of corresponding images for different values of span and degree can be found in annex. \\
+
+It seems that $(span, degree) \approx (0.6, 2)$ gives the lowest test error. But this the test error and doesn't give a good idea of how the prediction function would behave for new test data. \\
+R-code : 
+\begin{verbatim}
+plotLocalRegression <- function(span_val, degree_val) {
+    localReg <- loess(lcavol ~ lcp, data=prostate, span=span_val, degree=degree_val)
+    prediction <- predict(localReg, seq(-1.3864, 2.904, 0.01))
+    plot(prostate$lcp, prostate$lcavol, lwd=4,
+    		   pch=19, col="gray", xlab="lcp",
+    		   ylab="lcavol")
+    title = paste("Local polynomial regression of lcavol vs. lcp with span=", 
+    toString(span_val), "and degree=", toString(degree_val))
+    title(main=title)
+    lines(seq(-1.3864, 2.904, 0.01), prediction, col="blue", lwd=2.5)
+    legend(1.0, 0.0, c("Data points", "Smooth prediction function"), 
+           lty=c(1,1), lwd=c(4,2.5), col=c("gray", "blue"))
+           
+    print(sum((localReg$residuals)^2))
+}
+\end{verbatim}
+\end{solution}
+
+\begin{exercise}
+{Read ESL page 61 to 80.} Try to understand the difference between \texttt{prcomp} and \texttt{princomp} functions in R.
+\end{exercise}
+\begin{solution}
+It seems that the differences between these 2 function come from the fact that computation of principal components aren't done on the same matrixes. For \texttt{prcomp}, this is done on the covariance matrix of the columns while for \texttt{princomp} it can be done on the scaled correlation matrix. This gives the same eigenvectors but different eigenvalues.
+\end{solution}
+
+\begin{exercise}
+Simulate some regression data with correlated attributes: $n=20$ data points from the linear model  $y_i=2x_{1i}+2x_{2i}+\varepsilon_i$, where \texttt{epsilon=rnorm(0,sd=0.1)},  \texttt{x1=rnorm(20)}, but \texttt{x2=x1 + rnorm(20,sd=0.01)}. Do not forget to fix the \texttt{set.seed()} to obtain reproducible results.  Draw the scatter plot of $x_1$ versus $x_2$.
+\end{exercise}
+
+\begin{solution}
+R-code : 
+\begin{verbatim}
+> set.seed(0)
+> x1 <- rnorm(20)
+> epsilon <- rnorm(20,sd=0.1)
+> x2 <- x1 + rnorm(20, sd=0.01)
+> plot(x1, x2, pch=19, col="gray")
+\end{verbatim}
+\end{solution}
+
+\end{document}

@@ -1,0 +1,9 @@
+> plot(cRx, cRy, col="red", pch=19, xlim = c(0.0, 15.0), ylim = c(-1.0, 1.0), xlab="x", ylab="y")
+> points(cBx, cBy, col="blue", pch=19)
+> lines(c(7,7), c(-1.0, 1.0), col="purple", lwd=3)
+> lines(c(10,10), c(-1.0, 1.0), col="blue", lwd=1.5)
+> lines(c(4,4), c(-1.0, 1.0), col="red", lwd=1.5)
+> legend(8, 1.0, c("x/3 -7/3 = 0 (Separating hyperplane)", "x/3 - 7/3 = -1", "x/3 - 7/3 = 1"),
++        lty=c(1,1,1), lwd=c(3,1.5,1.5), col=c("purple", "red", "blue"))
+> points(4.0, 0.0, pch="O", lwd=3, col="gray")
+> points(10.0, 0.0, pch="O", lwd=3, col="gray")

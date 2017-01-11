@@ -1,0 +1,107 @@
+\documentclass[
+size=12pt,
+paper=screen,
+mode=handout,
+style=simple,
+nopagebreaks,
+fleqn
+]{powerdot}
+\usepackage{listings}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+
+
+
+\def \argmax{\mathrm {argmax}}
+\def \argmin{\mathrm {argmin}}
+\def \t{^{\top}}
+\def \E{\mathbb E}
+\def \V{\mathbb V}
+\def \bX{\mathbf X}
+\def \bx{\mathbf x}
+\def  \bY{\mathbf Y}
+\def  \bI{\mathbf I}
+\def \by{\mathbf y}
+\def \bbeta{\boldsymbol \beta}
+
+%defines verbatim method=file makes pause 
+\lstnewenvironment{code}{%
+\lstset{frame=single,escapeinside='',
+backgroundcolor=\color{white!20},
+basicstyle=\footnotesize\ttfamily}
+}{}
+\usepackage{hyperref}
+%\usepackage{lastpage}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\chead{MTH 6312: m\'ethodes statistiques d'apprentissage}
+
+\title{Session 4}
+\author{Vahid Partovi Nia}
+\date{\today}
+\begin{document}
+
+Exercise\\
+\begin{slide}{}
+\begin{enumerate}
+\item Local polynomial regression is implemented the \texttt{\color{blue}loess} function in R. Load the prostate data using \texttt{\color{blue}R>data(prostate)} from \texttt{\color{blue}ElemStatLearn} package and try to predict \texttt{\color{blue}lcavol} using only \texttt{\color{blue}lcp}. Visualize your prediction as a smooth function and play with parameters \texttt{\color{blue}span} and \texttt{\color{blue}degree}. Plot different fitting functions and after seeing these variants suggest some values for \texttt{\color{blue}span} and \texttt{\color{blue}degree} that fits the data better.\\
+\vspace{0.2in}
+{ \texttt{\color{red}Lesson to learn:} Bandwith of the kernel is more important than the form of the kernel or the polynomial order of the local regression.}
+\end{enumerate}
+\end{slide}
+
+\begin{slide}{}
+\begin{enumerate}
+    \setcounter{enumi}{1}
+
+   \item For given positive definite matrices $\mathbf B$ (Between Variance) and $\mathbf W$ (Within Variance), show $$ \lambda_\mathrm{max}=\max {\mathbf x\t \mathbf B \mathbf x \over \mathbf x\t \mathbf W \mathbf x}, \quad\quad\mathbf{e}_{\mathrm{max}}=\mathbf \argmax {\mathbf x\t \mathbf B \mathbf x \over \mathbf x\t \mathbf W \mathbf x}  $$
+   
+     where $\lambda_{\mathrm {max}}$ is the maximum eigenvalue of $\mathbf B\mathbf W^{-1}$. \\
+    Hint: use the result of the principal components developed in the class.    
+
+ \vspace{0.2in}
+  \item How do you think this optimization problem is related to data classification? 
+  \end{enumerate}
+
+
+\end{slide}
+
+\begin{slide}{}
+\begin{enumerate}
+    \setcounter{enumi}{3}
+\item \textcolor{red}{Read ESL page 61 to 80.} Try to understand the difference between \texttt{\color{blue}prcomp} and \texttt{\color{blue}princomp} functions in R.\\
+
+ \vspace{0.2in}
+\item Simulate some regression data with correlated attributes: $n=20$ data points from the linear model  $y_i=2x_{1i}+2x_{2i}+\varepsilon_i$, where \texttt{epsilon=rnorm(0,sd=0.1)},  \texttt{x1=rnorm(20)}, but \texttt{x2=x1 + rnorm(20,sd=0.01)}. Do not forget to fix the \texttt{set.seed()} to obtain reproducible results.  Draw the scatter plot of $x_1$ versus $x_2$.
+
+ \vspace{0.2in}
+    \item Produce the ridge trace plot, i.e. something similar to Figure 3.8 of ESL page 65 for your simulated data. A good value of the ridge regularization $\lambda$, is chosen where the estimated coefficients are stabilized. What is a good value for the ridge regularization $\lambda$ for your data?\\ 
+  Hint: Use \texttt{lm.ridge} in the \texttt{MASS} library.
+
+
+ \vspace{0.2in}
+   \item Find principal components of $x_1$ and $x_2$ say $\mathrm{pc}_1$ and $\mathrm{pc}_2$ and draw your data on the principal components axes.
+
+
+ \vspace{0.2in}
+  \item Implement a least squares regression on projected $x_1$ and $x_2$ on only $\mathrm{pc}_1$ (the principal component with the maximum eigenvalue) and find the regression coefficients. Compare this result with the ridge regression for a good value of $\lambda$. Which one estimates the regression coefficients better, the principal component regression or the ridge regression?\\
+ Hint: you must transform back the regression coefficient of your principal component fit to the original regression (in terms of the coefficients of $x_1$ and $x_2$). 
+
+\end{enumerate}
+\end{slide}
+\begin{slide}{}
+\begin{enumerate}
+    \setcounter{enumi}{8}
+\item Use \texttt{\color{blue}princomp} function in R. The principal vector is called ``loadings'' and projection into the principal component is called ``scores''. \\
+Take the zip training data using \texttt{\color{blue}R>data(zip.train)}  from the \texttt{\color{blue}ElemStatLearn} package in R. Produce a data set that contains only the digits 1 and 3. You will have a matrix of $n\times 257$ data. Unfortunately, you cannot visualize your $n$ points in $256$ dimensions (the first dimension is the digit indicator), but you can visualize them in two dimensions. Show the projected data onto $\mathrm{pc}_1$ and $\mathrm{pc}_2$ axes. Use the the first dimension of data (the digit value 1 or 3) to demonstrate the data of digit 1 with blue color and data of digit 3 with orange.  \\
+ \vspace{0.2in}
+{\color{red}Remark:} Principal components can be used for classification. But we may suggest something even better, go back to number 2 and think again. Principal component analysis is one of the major tools in machine learning, this magical tool can be used even to find image edges and to reconstruct noisy images, let's leave these applications for later exercises.
+
+ \end{enumerate}
+\end{slide}
+
+
+
+
+
+\end{document}

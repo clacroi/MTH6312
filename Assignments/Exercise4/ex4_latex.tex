@@ -1,0 +1,298 @@
+\documentclass[12pt,a4paper]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% write which packages is used in your text
+\usepackage{amsmath}
+\usepackage[amsmath]{ntheorem}
+\usepackage{lastpage}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+%now you can write a text with French accents 
+\usepackage[utf8]{inputenc}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% write your abbreviation of symbols here
+
+%fill the brackets with your firstname and lastname
+\def\StudentName{Corentin Lacroix} 
+%fill the brackets with your matricule (poly student number)
+\def\StudentMatricule{1812554}
+% exercise of which week? 
+\def\ExerciseNo{4}
+
+
+
+
+\def\R{\mathcal{R}}% set of real numbers as \R
+\def\argmax{\mathrm{argmax}} % argmax
+\def\argmin{\mathrm{argmin}} % argmin
+\def\T{^\top} %transpose
+\def\bbeta{\boldsymbol \beta} % bold beta
+
+\def \E{\mathbb E}
+\def \V{\mathbb V}
+\def \bX{\mathbf X}
+\def \bx{\mathbf x}
+\def  \bY{\mathbf Y}
+\def  \bI{\mathbf I}
+\def \by{\mathbf y}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% define your tags here
+\theoremheaderfont{\normalfont\bfseries}
+\theorembodyfont{\normalfont}
+\newtheorem{exercise}{Exercise}
+\newtheorem{solution}{Solution}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% define what to write in paper margins
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{{\bf~\StudentName,~\StudentMatricule}}
+\chead{}
+\rhead{\emph{MTH6312: Exercise~\ExerciseNo}}
+\lfoot{}
+\cfoot{\thepage~/~\pageref{LastPage}}
+\rfoot{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% gives more space and expands margins
+\textwidth 6.4in
+\textheight 9in \oddsidemargin 0in \evensidemargin 0in \topmargin -0.5in
+\renewcommand{\baselinestretch}{2} 
+% this puts more space between lines, so that I can write comments in between
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+
+%%%%%Generates your first page
+\begin{titlepage}
+\begin{center}
+\textsc{\LARGE Exercise no \ExerciseNo}\\[1.5cm]
+\vspace{2in}
+\textsc{\Large \StudentName~\StudentMatricule}\\[0.5cm]
+\textsc{MTH 6312: Méthodes Statistiques D'Apprentissage}\\[0.5cm]
+\today
+\end{center}
+\end{titlepage}
+%%%% Title Page ends here
+
+\begin{exercise}
+Show the kernel density estimator $\hat f (y)={1\over n\lambda} \sum_{i=1}^n K({y_i-y\over \lambda })$ 
+ for any non-negative kernel that $ \int_{-\infty}^\infty K(y)dy=1$ is a probability density. \\
+ Hint : you must show $\hat f(y)\geq 0$ and $\int_{-\infty}^\infty \hat f(y)dy=1$.
+\end{exercise}
+\begin{solution}
+\ \\
+(i) As $\forall x \in  \R, K(x) \geq 0$, we have trivially $\forall y \in \R, \hat{f}(y) = \frac{1}{n\lambda} \sum_{i=1}^{n} K(\frac{y_i - y}{\lambda}) \geq 0$ \\
+
+(ii) Let's try to compute $\int_{-\infty}^{+\infty}f(y)dy$ (we should first try to simplify the integral on a non infinite interval $[-A,A], A \geq 0$, -notably for inversing sum and integral or applying a variable change- and then find the limit for $A \rightarrow \infty$ of the simplified quantity but here calculation is simple so we can pass this step)\\
+
+$\int_{-\infty}^{+\infty}f(y)dy = \frac{1}{n\lambda}\int_{-\infty}^{+\infty} \sum_{i=1}^n K(\frac{y_i-y}{\lambda})dy = \frac{1}{n\lambda} \sum_{i=1}^n \int_{-\infty}^{+\infty} K(\frac{y_i-y}{\lambda})dy$\\
+
+Then with the change $u_i = \frac{y_i-y}{\lambda}, du_i = -\frac{dy}{\lambda} \lambda > 0$ applied to our n integrals, we get : $$\int_{-\infty}^{+\infty}f(y)dy = - \frac{1}{n\lambda} \sum_{i=1}^n \lambda \int_{+\infty}^{-\infty} K(u)du = \frac{1}{n} \sum_{i=1}^n \int_{-\infty}^{+\infty} K(u)du = 1 because \int_{+\infty}^{-\infty} K(u)du = 1$$
+
+We can conclude that $$\boxed{f\ is\ a\ probability\ density}$$
+\end{solution}
+
+\begin{exercise}
+Show that the eigen values of $\mathbf A+\lambda \mathbf I$ equals $\lambda_i+\lambda$ where $\lambda_i$'s are the eigenvalues of $\mathbf A$. Use this result to argue where the ridge regression is useful.
+\end{exercise}
+\begin{solution}
+Let A be a matrix of $\R^n$ and $\lambda \in \R$\\
+\begin{equation}
+\begin{split}
+\lambda_i \ eigen\ value\ of\ A & \Longleftrightarrow \exists x_i \in \R^n, Ax_i = \lambda_i x_i \\
+ & \Longleftrightarrow \exists x_i \in \R^n, (A + \lambda_i I) x_i = (\lambda_i + \lambda) x_i\\
+ &  \Longleftrightarrow \lambda_i + \lambda\ eigen\ value\ of\ A + \lambda I \\
+\end{split}
+\end{equation} 
+Moreover, we know that a $n \times n$ symetric matrix ($X^T X$ or $X^T X + \lambda I$ for example) always admits n different eigen vectors $\mu_i$ associated to real eigen values $\lambda_i$. So thanks to this and the previous results, we can deduce that if $\lambda > 0$ all eigen values of  $X^T X + \lambda I, (\lambda_i + \lambda)$ are non zero eigen values (because are equals to at least $\lambda$. And thus, $X^T X + \lambda I$ is inversible and there is one unique solution to the Ridge linear regression Least Square problem $\hat \beta_{ridge}$.
+\end{solution}
+
+\begin{exercise}
+Show the degrees of freedom of the ridge regression $\mathrm{df}_\lambda=\mathrm {tr} \{X (X^T X + \lambda I)^{-1} X^T \}=\sum_{j=1}^p {\lambda_j\over \lambda_j+ \lambda}$ where $\lambda_j$ is the eigenvalues of $X^T\ X$. \\
+Hint: use the singular value decomposition of $X$.
+\end{exercise}
+
+\begin{solution}
+The singular value decomposition of a $n \times p$ matrix says :\\ $\forall M\ \ n \times p $ with real coefficients matrix, $\exists\ Q\ n \times n$ orthogonal matrix, $P\ p \times p$ orthogonal matrix and $D\ p\ \times n$ diagonal per block matrix s.t $M = QDP^T$
+
+And then : \\
+\begin{equation}
+\begin{split}
+X^T(X^T X + \lambda I)^{-1})X^T & = X((QDP^T)^T QDP^T + \lambda I)^{-1}X^T \\
+& = X(P D^T Q^T Q D P^T + \lambda I)^{-1}X^T \\
+& = X(P D^T D P^T + \lambda I)X^T\\
+& = X(P(D^T D + \lambda I)P^T)^{-1}X^T\\
+& = Q D P^T P(D^T D + \lambda I)^{-1}P^T X^T\\
+& = Q D(D^T D + \lambda I)^-1 D^T Q^T\\
+\end{split}
+\end{equation} 
+But $D^T D$ is diagonal and has the same eigen values than $X^T X$ (we can prove it by writing $X^T X$). So with $D^T D = (\lambda_i)_{i \in [1,n]}$ (this also means non zero pseudo diagonal values in D will be $\sqrt{\lambda_i)}$, we have : $X^T(X^T X + \lambda I)^{-1})X^T = QDdiag(\frac{1}{\lambda_i + \lambda})D^T Q^T$\\
+
+Then, $Ddiag(\frac{1}{\lambda_i + \lambda})D$ is also diagonal with an ensemble of diagonal values being smaller or larger than the diagonal values ensemble of $D^T D$ (it depends in fact on wheter n or p is smaller). Diagonal values of $Ddiag(\frac{1}{\lambda_i + \lambda})D$ are $\{\frac{\lambda_i}{\lambda_i + \lambda}\}$ with more or less elements : if $p < n$ all non zero diagonal values are removed from this ensemble ; if $p > n$, zero values are added to this ensemble containing only non zero values. As only zero values are added/removed to the diagonal values of $Ddiag(\frac{\lambda_i}{\lambda_i})D$, this doesn't change its trace.\\
+
+ Moreover, $Tr(QD(D^TD + \lambda I)D^TQ^T) = Tr(D(D^TD + \lambda I)D^T)$ (left and right multiplication of a matrix by a matrix and its inverse.\\
+ 
+ Consequently we have $$ \boxed{Tr(X^T(X^T X + \lambda I)^{-1})X^T) = \sum_{i=1}^p \frac{\lambda_i}{\lambda_i + \lambda}}$$ 
+So
+\end{solution}
+
+\begin{exercise}
+Find the maximum likelihood estimator of $\boldsymbol \beta$ for the weighted linear regression. Weighted linear regression or \emph{General Linear Model}  is $\mathbf y=\mathbf X\boldsymbol \beta+\boldsymbol \varepsilon$ while $\boldsymbol \varepsilon \sim N(\mathbf 0, \mathbf W)$ and $\mathbf W$ is the known variance covariance matrix of $\boldsymbol \varepsilon$. A general linear model is called ordinary linear regression if $\mathbf W=\sigma^2 \mathbf I$ for a known $\sigma^2$.
+\end{exercise}
+\begin{solution}
+The random variable $Y|X \sim N(X \beta, W)$ with $X$ fixed. With this density function (and the realization Y of this random variable) we can express the likelihood of $\beta$ given a realization Y of $\boldsymbol Y|X$ :\\
+
+And $L(\beta) = f(\beta) = \frac{1}{|W|^{\frac{1}{2}}\sqrt{2\pi}}\exp^{-\frac{1}{2}(Y-X\beta)^TW^{-1}(Y-X\beta)}$
+
+The log likelihood $l(\beta)$ is $l(\beta) = -\frac{1}{2}ln(|W|) -\frac{1}{2}ln(2\pi) - \frac{1}{2}((Y-X\beta)^TW^{-1}(Y-X\beta)$\\
+
+And the log likelihood estimator given by $\hat \beta = argmax_\beta (l(\beta))$ is given by the equation $\frac{\partial \l}{\partial \beta}(\hat \beta) = 0$ (convex optimization problem in coefficients of $\beta$).\\
+
+With :
+\begin{equation}
+\begin{split}
+ \frac{\partial \l}{\partial \beta}(\beta) & = -\frac{1}{2}(\frac{\partial(Y -X\beta)^T}{\partial \beta}W^{-1}(Y-X\beta) + (Y -X\beta)^T W^{-1}(\frac{\partial(Y -X\beta)}{\partial \beta} \\
+ & = -\frac{1}{2}(-X^T W^{-1}(Y -X\beta) - (Y -X\beta)^T W^{-1} X) \\
+ & = X^T W^{-1}(Y-X \beta) \ by\ taking\ the\ transpose\ of\ the\ second\ member\ (1 \times 1\ matrix\ and\ W\ diagonal)
+ \end{split}
+\end{equation}
+
+Finally, $\hat \beta$ is given by :
+
+$$\boxed{X^T W^{-1}(Y-X \hat \beta) = 0 \Longleftrightarrow \hat \beta = (X^T W^{-1} X)^{-1} X^T W^{-1} Y\ under\ assumption\ that\ X^T W^{-1} X\ is\ inversible}$$
+\end{solution}
+
+\begin{exercise}
+How do you compute the coefficients of the weighted linear regression? Write the steps of the computations.
+\end{exercise}
+\begin{solution}
+The problem comes from inversing $X^T W^{-1} X$, a numerical computational process that can give very instable results.\\
+
+Given the equation $X^T W^{-1} X \hat \beta = X^TW^{-1}Y$ that is a linear system, we can compute $\hat \beta$ by :\\
+(i) Computing $W^{-1}$ which is easy because W is diagonal\\
+(ii) Computing $X^T W^{-1} X$ and $X^TW{-1}Y$ that is succession of + and x\\
+(iii) solving the linear p unknown variables system $X^T W^{-1} X \hat \beta = X^TW^{-1}Y$
+
+In R, the code would be :  
+\begin{verbatim}
+> Winv <- solve(W)
+> beta_opt <- solve(t(X)%*%Winv%*%X, t(X)%*%Winv%*%Y)
+\end{verbatim}
+\end{solution}
+
+\begin{exercise}
+How do you fit a weighted linear regression using a code that only fits the ordinary linear regression?
+\end{exercise}
+\begin{solution}
+By $Y = X\beta + \varepsilon$ with $\varepsilon \sim N(0,W)$ and multiplying by the left the 2 sides of the equation by $W^{-\frac{1}{2}}$, we get :\\
+$W^{-\frac{1}{2}} Y = W^{-\frac{1}{2}} X\beta + W^{-\frac{1}{2}} \varepsilon \Longleftrightarrow Y' = X'\beta + \varepsilon'$ with $\varepsilon' \sim N(W^{-\frac{1}{2}} 0,W^{-\frac{1}{2}} W W^{-\frac{1}{2}}) \sim N(0,I)$\\
+
+And the soluion of ordinary linear regression problem is for $Y', X'$ is : \\
+\begin{equation}
+\begin{split}
+\hat \beta & = (X^{'T}X)X^T Y\\
+& = ((W^{-\frac{1}{2}} X)^T (W^{-\frac{1}{2}} X))^{-1} (W^{-\frac{1}{2}} X)^T (W^{-\frac{1}{2}} X)) \\
+& = (X^T W^{-1} X)^{-1} X^T W^{-1} Y
+ \end{split}
+\end{equation}
+
+This is also the solution os the weighted linear regression for Y and X. To solve the weighted linear regression problem, we just have to get the solution os the ordinary linear regression for Y' and X'. 
+\end{solution}
+
+\begin{exercise}
+Show that the kernel smoothing (weighted average)  is the solution of the following optimization if $f_\theta(x)=\theta_0$
+ $$\hat \theta(x_0)= \mathrm{argmin}_\theta \sum_{i=1}^N K(x_0,x_i) \{y_i-f_\theta(x_i)\}^2,$$
+ $$ \hat f(x_0)= f_{\hat \theta} (x_0)$$
+\end{exercise}
+\begin{solution}
+If $f_\theta(x)=\theta$ the optimization problem becomes 
+$$\hat \theta(x_0)= \mathrm{argmin}_\theta \sum_{i=1}^N K(x_0,x_i) \{y_i-\theta\}^2\ (1),$$
+ $$ \hat f(x_0)= f_{\hat \theta(x_0)} (x_0) = \hat \theta(x_0)\ (2) $$
+ 
+ With $\varphi(\theta) = \sum_{i=1}^n K(x_0, x_i)(y_i - \theta)^2$, minimizing $\varphi$ is equivalent to solving :\\
+\begin{equation}
+\begin{split} 
+ \frac{\partial \varphi}{\partial \beta} (\hat \beta)= 0 & \Longleftrightarrow -2 \sum_{i=1}^n K(x_0, x_i)(y_i - \hat \theta) = 0\\
+ & \Longleftrightarrow \hat \theta = \frac{1}{\sum_{i=1}^n K(x_0, x_i)} \sum_{i=1}^n K(x_0, x_i) y_i
+  \end{split}
+\end{equation}
+So $\hat f$ is also the solution of the weigthed average problem.    
+\end{solution}
+
+\begin{exercise}
+Find the link between this optimization problem and the  weighted linear regression.
+\end{exercise}
+
+\begin{solution}
+\begin{equation}
+\begin{split}
+\hat \beta\ solution\ of\ weighted\ linear\ regression\ & \Longleftrightarrow \hat \beta = argmax_\beta(- \frac{1}{2}((Y-X\beta)^TW^{-1}(Y-X\beta))\\
+ & \Longleftrightarrow \hat \beta = argmin_\beta(\sum_{j=1}^n \frac{1}{\sigma_j^2}(y_j - \sum_{i=1}^nx_{ji}\beta_i)^2)\\
+\end{split}
+\end{equation}
+Consequently here, with weights $W(x_0, x_i) = W(x_i) = W(i) = \frac{1}{\sigma_i^2}$ and the function $f_\beta(x_0) = \sum_{j=1}^n \beta_i x_{0i}$, we have an optimization problem of the same class than previously but with global weights depending only on the ith inputs $x_i$. Weighted linear regression is a kernel smoothing method (but with neighborhoods being global and weights not depending on the new input $x_0$).
+\end{solution}
+
+\begin{exercise}
+Find the solution of $\hat f$ for $f_\theta(x)=\theta_0+\theta_1 x$?
+\end{exercise}
+\begin{solution}
+The optimisation problem is : 
+$$\hat \theta(x_0)= \mathrm{argmin}_\theta \sum_{i=1}^N K(x_0,x_i) \{y_i-\theta_0 - \theta_1 x_i\}^2\ (1),$$
+ $$ \hat f(x_0)= f_{\hat \theta(x_0)} (x_0) = \hat \theta_0(x_0) + \hat \theta_1(x_0) x_1\ (2) $$
+ 
+ Let $\varphi$ be : $\forall \theta \in \R, \varphi(\theta) = \sum_{i=1}^N K(x_0,x_i)(y_i-\theta_0 - \theta_1 x_i)^2$
+\begin{equation} 
+\begin{split}
+ \hat \theta(x_0)= \mathrm{argmin}_\theta \sum_{i=1}^N K(x_0,x_i) \{y_i-\theta_0 - \theta_1 x_i\}^2 & \Longleftrightarrow \frac{\partial \varphi}{\partial \theta}(\hat \theta) = 0\\
+  \end{split}
+\end{equation}
+Then 
+ $\frac{\partial \varphi}{\partial \theta_0}(\hat \theta) \Longleftrightarrow \hat \theta_0 = \frac{1}{\sum_{i=1}^N K(x_0,x_i)}\sum_{i=1}^N K(x_0,x_i)(y_i - \hat \theta1 x_i) = \overset{+}{y} - \theta_1 \overset{+}{x}$ with $\overset{+}{y},\ \overset{+}{x}$ being weighted means of $y=(y_1, \dots, y_N)$ and $x = (x_1, \dots, x_N)$\\
+And 
+\begin{equation} 
+\begin{split}
+\frac{\partial \varphi}{\partial \theta_1}(\hat \theta) = 0 & \Longleftrightarrow \sum_{i=1}^N K(x_0,x_i)x_i(y_i - \hat \theta1 x_i) = 0 \\
+& \Longleftrightarrow \sum_{i=1}^N K(x_0,x_i)x_i \hat\theta_1 (\overset{+}{x} - x_i) = \sum_{i=1}^N K(x_0,x_i)x_i(y_i - \overset{+}{y})\\
+& \Longleftrightarrow \hat \theta_1 = \frac{\sum_{i=1}^N K(x_0,x_i)x_i(y_i - \overset{+}{y})}{\sum_{i=1}^N K(x_0,x_i)x_i(\overset{+}{x} - x_i)}\\
+ \end{split}
+\end{equation}
+With $\sum_{i=1}^N K(x_0,x_i)x_i \overset{+}{y} = \frac{1}{\sum_{i=1}^N K(x_0,x_i)} \sum_{j=1}^N K(x_0,x_j)y_j \times \sum_{i=1}^N K(x_0,x_i)x_i = \overset{+}{x} \sum_{j=1}^N K(x_0,x_j)y_j = \sum_{i=1}^N K(x_0,x_i) \times  \overset{+}{y} \overset{+}{x}$,\\
+ we have $\sum_{i=1}^N K(x_0,x_i)x_i(y_i - \overset{+}{y}) = \sum_{i=1}^N K(x_0,x_i)(y_ix_i - \overset{+}{y}x_i - \overset{+}{x}y_i + \overset{+}{y}\overset{+}{x}) = \sum_{i=1}^N K(x_0,x_i)(x_i - \overset{+}{x})(y_i - \overset{+}{y})$
+ 
+ And with a similar trick for the denominator, we easily show that : $$\boxed{\hat \theta_1 = \frac{\sum_{i=1}^N K(x_0,x_i)(x_i - \overset{+}{x})(y_i - \overset{+}{y})}{\sum_{i=1}^N K(x_0,x_i)(x_i - \overset{+}{x})^2}}$$
+\end{solution}
+
+\begin{exercise}
+Find the solution of $\hat f$ for $f_\theta(x)=\theta_0+\sum_{j=1}^M \theta_j x^j$?
+\end{exercise}
+\begin{solution}
+Solution not found...
+\end{solution}
+
+\begin{exercise}
+Find the linearly constrained least squares estimator $(\mathbf y - \mathbf X \beta)^T(\mathbf y-\mathbf X \beta)$ subject to 
+$\mathbf \beta=\mathbf b$ in which $\mathbf T$ and $\mathbf b$ both are known. How do you compute this estimator efficiently? \\
+Hint: use the Lagrangian dual.
+\end{exercise}
+\begin{solution}
+We want to minimize $(\mathbf y - \mathbf X \beta)^T(\mathbf y-\mathbf X \beta)$ subject to $\mathbf \beta=\mathbf b$ \\
+By using Lagrangian dual optimization method, this is equivalent to minimize $\varphi(\beta) = (Y-X\beta)^T(Y-X\beta) + \mu T \beta$ with $\mu > 0$. This is a convex optimization problem (toward $\beta$), thus minimum of the function is given by :
+\begin{equation} 
+\begin{split}
+\frac{\partial \varphi}{\partial \beta}(\hat \beta) = 0 & \Longleftrightarrow -2X^T(Y-X\beta) + \mu T = 0\\
+& \Longleftrightarrow 2X^T X \beta = 2X^T Y + \mu T\\
+& \Longleftrightarrow \hat \beta = (X^T X)^{-1}(X^TY + \frac{1}{2} \mu T)
+ \end{split}
+\end{equation}
+
+Thus, the linearly constrained least squares estimator is $$\boxed{\hat \beta = (X^T X)^{-1}(X^TY + \frac{1}{2} \mu T)}$$
+\end{solution}
+\end{document}

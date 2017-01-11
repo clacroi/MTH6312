@@ -1,0 +1,45 @@
+Xtest <- prostate
+sXtest <- scale(as.matrix(sXtest))
+sXtestDf <- data.frame(sXtestDf)
+
+
+Leave One out : 
+
+oneLeaveOut <- function(X, Y, lambdaSeq) {
+    errVector <- rep(0, length(lambdaSeq))
+    for(k in 1:nrow(X)){
+        Xtemp <- X[-k,]
+        Ytemp <- Y[-k,]
+        fit <-glmnet(as.matrix(Xtemp), Ytemp, alpha = 1, lambda=lambdaSeq, standardize=TRUE)
+        err <- (as.numeric(predict(fit, as.matrix(X[k,]))) - rep(as.numeric(Y[k,]), length(lambdaSeq)))
+        errVector <- errVector + err*err
+    }
+    return(errVector/nrow(X))
+}
+
+5 - fold cross validation (without averaging over multiples K-fold processes) : 
+
+cv5 <- function(X,Y, lambdaSeq) {
+    errVector <- rep(0, length(lambdaSeq))
+    kFolds <- cvFolds(97, 5)
+    X["subset"] = sapply(kFolds$subsets, function(x) {x %% 5 + 1})
+    for(i in 1:5) {
+        Xtr <- X[X$subset != i,]
+        Xte <- X[X$subset == i,]
+        Ytr <- Y[X$subset != i,]
+        Yte <- Y[X$subset == i,]
+        lassoFit <- glmnet(as.matrix(Xtr), Ytr, alpha=1, lambda=lambdaSeq)
+        Xpred <- predict(lassoFit, as.matrix(Xte))
+        Xerr = sweep(Xpred, 1, as.matrix(Yte), '-')
+        errVector <- errVector +  colSums(Xerr * Xerr)
+    }
+    return(errVector/97)
+    
+}
+
+treeFit <- tree(spam ~., data=spam, split="deviance")
+
+prunedTreeFit <- prune.tree(treeFit, k = seq(0.0, 100.0, 0.1))
+prunedTreeFit <- prune.tree(treeFit, k = 120)
+
+cvPrunedTree <- cv.tree(tree, FUN=prune.tree, K=5)

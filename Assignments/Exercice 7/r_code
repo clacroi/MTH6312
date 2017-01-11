@@ -1,0 +1,7 @@
+> plot(subset(bone, gender == 'female')$age, subset(bone, gender == 'female')$spnbmd, col='red', pch=3, xlab='Age', ylab='Relative change in spinal BMD')
+> points(subset(bone, gender == 'male')$age, subset(bone, gender == 'male')$spnbmd, col='blue', pch=4)
+> femaleSmooth = smooth.spline(subset(bone, gender == 'female')$age, subset(bone, gender == 'female')$spnbmd, df=12)
+> maleSmooth = smooth.spline(subset(bone, gender == 'male')$age, subset(bone, gender == 'male')$spnbmd, df=12)
+> lines(femaleSmooth, col='red', lwd=3)
+> lines(maleSmooth, col='blue', lwd=3)
+> legend(20, 0.125, c("Female", "Male"), lty=c(1,1), lwd=c(2.5,2.5), col=c("red", "blue"))

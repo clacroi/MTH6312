@@ -1,0 +1,75 @@
+---
+title: 'Machine Learning : Exercise 3'
+author: "Corentin Lacroix"
+date: "29 septembre 2015"
+output: html_document
+---
+
+###Questions
+
+####1)
+
+  For this first project, I would like to work on sports games scores prediction and especially soccer games scores prediction. Many companies all over the world provide betting services for all kinds of sport, including soccer. When a set of professional soccer games is organized in a country, bookmakers provide betting odds for all kind of bets. The most common bet for a soccer game is the ”1N2” bet where the gambler has to bet either on the victory of the home team (team 1), the victory of the outside team (team 2) or a draw score. An odd is provided for all the possible results of the bet (odd1 for team1 winning, odd2 for team 2 winning and odd3 for draw score).
+  
+  I would like to set up a system that tries to predict - over two teams - which one will more likely win the game (with a confidence score over the result). With this system, one could drastically improve our probability to win money by betting money on the games for which we have predicted a victory result with great confidence. I am thinking currently that for 2 teams T1 and T2 these features could be useful for predicting the one more likely to win the game (this is not an exhaustive list):
+    
+- League rank of T1 and league rank of T2
+- T1 Ratio of wins in last p games (if possible)
+- T2 Ratio of wins in last p games (if possible)
+- T1 Ratio of wins in last m games against T2
+- T1.home = 1 if T1 plays at home, 0 else
+- Team composition score (high if teams owns great players, low else)
+- Number of days since last game for T1
+- Number of days since last game for T2
+- Other qualitative features: game with high importance, important players injuries, etc.
+
+  After having built the prediction system, we would need to optimize our use of its predictions for a peculiar set of odds (i.e coming from the same company or bookmaker). Optimizing here means looking for what to do with our predictions in order to maximize our profit: how much predictions using at each time? Which confidence threshold using for deciding if we bet on a game? How much should we bet on a game given the result confidence score? Etc.
+  If our predictions are just a little bit correct, we could beat many bookmakers and make a lot more money than 50$ ! 
+  
+  Many soccer datasets\databases or data web services are available on Internet. They give all soccer results from 30 years ago to now on. Other datasets coming from popular football video games (like “FIfa” or “L’Entraineur”) can be useful insofar as team quality scores are concerned. 
+
+####2)
+
+Import useful libraries
+
+```{r}
+library("ggplot2")
+library("ggmap")
+library("MASS")
+```
+
+Import data via API (multiple imports are necessary because when requesting with filters, there is a limit of 50000 lines csv file returned)
+
+```{r}
+chicago_crimes <- na.omit(rbind(read.csv("https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$select=longitude,latitude&$where=date%3E%272015-01-01T00:00:00.000%27%20AND%20date%3C%272015-03-01T00:00:00.000%27&$limit=50000"), read.csv("https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$select=longitude,latitude&$where=date%3E%272015-03-01T00:00:00.000%27%20AND%20date%3C%272015-05-01T00:00:00.000%27&$limit=50000"), read.csv("https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$select=longitude,latitude&$where=date%3E%272015-05-01T00:00:00.000%27%20AND%20date%3C%272015-07-01T00:00:00.000%27&$limit=50000"), read.csv("https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$select=longitude,latitude&$where=date%3E%272015-07-01T00:00:00.000%27%20AND%20date%3C%272015-09-01T00:00:00.000%27&$limit=50000"), read.csv("https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$select=longitude,latitude&$where=date%3E%272015-09-01T00:00:00.000%27%20AND%20date%3C%272015-10-01T00:00:00.000%27&$limit=50000")))
+```
+
+Plot data on Chicago map
+
+```{r}
+chicago_map <- get_map(location=c(-87.95,41.65,-87.4,42.05),maptype="roadmap",source="google")
+ggmap(chicago_map)
+p <- ggmap(chicago_map)
+p <- p + geom_point(data=chicago_crimes[,c("Longitude","Latitude")], aes(x=Longitude, y=Latitude), color="red", alpha=0.05, size=0.8)
+p
+```
+
+####3)
+
+PLot crimes density toward latitude
+
+```{r}
+plot(density(as.vector(chicago_crimes[,c("Latitude")])), xlab="Latitude", ylab="Density", main="Crime density over latitude")
+```
+
+####4) 
+
+PLot 2D density
+
+```{r}
+two_d_density <- kde2d(as.vector(na.omit(chicago_crimes[,c("Latitude")])), as.vector(na.omit(chicago_crimes[,c("Longitude")])),n=c(75,75))
+lat <- two_d_density$x
+lon <- two_d_density$y
+density <- two_d_density$z
+persp(lat, lon, density, phi=50)
+```
